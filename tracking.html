@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>dataTracking</title>
+    <link rel="stylesheet" href="css/tracking.css" />
+  </head>
+  <body>
+    <header>
+      <h1>HALAMAN TRACKING BAHAN AJAR</h1>
+      <nav id="navigasi">
+        <a href="stock.html">Stock</a>
+        <a href="tracking.html">Tracking</a>
+      </nav>
+    </header>
+
+    <!-- dashboard  tracking -->
+    <div id="app" class="container">
+      <div class="card">
+        <h2>Form Tracking Delivery Order</h2>
+        <div class="form-group">
+          <label>Nomor DO</label>
+          <input
+            type="text"
+            v-model="form.nomorDO"
+            placeholder="Masukan nomor do. contoh: DO2026-0002"
+          />
+        </div>
+        <div class="form-group">
+          <label>NIM</label>
+          <input type="text" v-model="form.nim" placeholder="Masukkan NIM" />
+        </div>
+        <div class="form-group">
+          <label>Nama</label>
+          <input type="text" v-model="form.nama" placeholder="Masukkan Nama" />
+        </div>
+        <div class="form-group">
+          <label>Ekspedisi</label>
+          <select v-model="form.ekspedisi">
+            <option value="">Pilih Ekspedisi</option>
+            <option
+              v-for="item in pengirimanList"
+              :key="item.kode"
+              :value="item.nama"
+            >
+              {{ item.nama }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Paket Bahan Ajar</label>
+          <select v-model="selectedPaketKode">
+            <option value="">Pilih Paket</option>
+            <option v-for="item in paket" :key="item.kode" :value="item.kode">
+              {{ item.kode }} - {{ item.nama }}
+            </option>
+          </select>
+        </div>
+
+        <!-- detail paket -->
+        <div class="detail-paket" v-if="selectedPaket">
+          <h3>Detail Paket</h3>
+          <p><strong>Kode:</strong>{{ selectedPaket.kode }}</p>
+          <p><strong>Nama:</strong>{{ selectedPaket.nama }}</p>
+          <p>
+            <strong>Harga:</strong>Rp
+            {{selectedPaket.harga.toLocaleString('id-ID') }}
+          </p>
+
+          <h4>Isi Paket:</h4>
+          <ul>
+            <li v-for="isi in selectedPaket.isi" :key="isi">{{ isi }}</li>
+          </ul>
+        </div>
+
+        <div class="form-group">
+          <label>Tanggal Kirim</label>
+          <input type="date" v-model="form.tanggalKirim" />
+        </div>
+
+        <div class="form-group">
+          <label>Total Harga</label>
+          <input
+            type="text"
+            :value="'Rp ' + totalHarga.toLocaleString('id-ID')"
+            readonly
+          />
+        </div>
+
+        <button @click="tambahDO">submit</button>
+      </div>
+
+      <!-- TABEL -->
+      <div class="card">
+        <h2>informasi Bahan Ajar Anda</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>No DO</th>
+              <th>NIM</th>
+              <th>Nama</th>
+              <th>Ekspedisi</th>
+              <th>Paket</th>
+              <th>Tanggal Kirim</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="item in trackingList" :key="item.nomorDO">
+              <td>{{ item.nomorDO }}</td>
+              <td>{{ item.nim }}</td>
+              <td>{{ item.nama }}</td>
+              <td>{{ item.ekspedisi }}</td>
+              <td>{{ item.paket }}</td>
+              <td>{{ item.tanggalKirim }}</td>
+              <td>Rp {{ item.total.toLocaleString('id-ID') }}</td>
+
+              <td>{{ item.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Vue JS -->
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16"></script>
+    <script src="js/tracking.app.js"></script>
+  </body>
+</html>

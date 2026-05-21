@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Bahan Ajar</title>
+    <link rel="stylesheet" href="css/stock.css" />
+  </head>
+  <body>
+    <header>
+      <h1>HALAMAN INFORMASI STOCK BAHAN AJAR</h1>
+      <nav id="navigasi">
+        <a href="stock.html">Stock</a>
+        <a href="tracking.html">Tracking</a>
+      </nav>
+    </header>
+
+    <div id="app">
+      <div class="fitur-navbar">
+        <button class="btn-navbar tambah" @click="showTambahModul = true">
+          + Tambah Data
+        </button>
+        <button class="btn-navbar reset" @click="resetFilter">
+          Reset Filter
+        </button>
+      </div>
+
+      <!-- dasboard stock-->
+      <div class="filter-container">
+        <!-- filter upbjj -->
+        <select v-model="selectedUPBJJ">
+          <option value="">Semua UT Daerah</option>
+          <option v-for="upbjj in upbjjList" :key="upbjj" :value="upbjj">
+            {{ upbjj }}
+          </option>
+        </select>
+
+        <!-- Filter kategori-->
+        <select v-if="selectedUPBJJ" v-model="selectedKategori">
+          <option value="">Semua Kategori</option>
+          <option
+            v-for="kategori in kategoriFiltered"
+            :key="kategori"
+            :value="kategori"
+          >
+            {{ kategori }}
+          </option>
+        </select>
+
+        <!-- filter sort-->
+        <select v-model="sortBy">
+          <option value="">Sort Data</option>
+          <option value="judul">Judul</option>
+          <option value="stock">Stock</option>
+          <option value="harga">Harga</option>
+        </select>
+
+        <!-- REORDER -->
+        <label class="checkbox-box">
+          <input type="checkbox" v-model="reorderOnly" />
+          <b>Reorder</b>
+        </label>
+      </div>
+
+      <!-- TABEL -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Kode</th>
+              <th>Judul</th>
+              <th>Kategori</th>
+              <th>UT Daerah</th>
+              <th>Lokasi Rak</th>
+              <th>Harga</th>
+              <th>Qty</th>
+              <th>Safety</th>
+              <th>Status</th>
+              <th>Catatan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(item,index) in filteredStok" :key="index">
+              <td>{{ item.kode }}</td>
+              <td>{{ item.judul }}</td>
+              <td>{{ item.kategori }}</td>
+              <td>{{ item.upbjj }}</td>
+              <td>{{ item.lokasiRak }}</td>
+              <td>Rp {{ Number(item.harga).toLocaleString() }}</td>
+              <td>{{ item.qty }}</td>
+              <td>{{ item.safety }}</td>
+
+              <!-- Status bahan ajar -->
+              <td>
+                <span
+                  :class="{
+                  aman: item.qty >= item.safety,
+                  menipis: item.qty < item.safety && item.qty > 0,
+                  kosong: item.qty === 0
+                }"
+                >
+                  {{ getStatus(item) }}
+                </span>
+              </td>
+
+              <!-- CATATAN -->
+              <td v-html="item.catatanHTML"></td>
+
+              <!-- edit bahan ajar -->
+              <td>
+                <button class="btn-edit" @click="openEditModul(index)">
+                  Edit
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- tambah modul -->
+      <div class="modul-overlay" v-if="showTambahModul">
+        <div class="modul-box">
+          <div class="modul-header">
+            <h3>Tambah Data Bahan Ajar</h3>
+            <button class="btn-close" @click="showTambahModul = false">
+              X
+            </button>
+          </div>
+
+          <div class="form-container">
+            <input type="text" placeholder="Kode" v-model="formTambah.kode" />
+            <input type="text" placeholder="Judul" v-model="formTambah.judul" />
+            <select v-model="formTambah.kategori">
+              <option value="">Pilih Kategori</option>
+              <option
+                v-for="kategori in kategoriList"
+                :key="kategori"
+                :value="kategori"
+              >
+                {{ kategori }}
+              </option>
+            </select>
+
+            <select v-model="formTambah.upbjj">
+              <option value="">Pilih UPBJJ</option>
+              <option v-for="upbjj in upbjjList" :key="upbjj" :value="upbjj">
+                {{ upbjj }}
+              </option>
+            </select>
+            <input
+              type="text"
+              placeholder="Lokasi Rak"
+              v-model="formTambah.lokasiRak"
+            />
+            <input
+              type="number"
+              placeholder="Harga"
+              v-model.number="formTambah.harga"
+            />
+            <input
+              type="number"
+              placeholder="Qty"
+              v-model.number="formTambah.qty"
+            />
+            <input
+              type="number"
+              placeholder="Safety"
+              v-model.number="formTambah.safety"
+            />
+            <input
+              type="text"
+              placeholder="Catatan"
+              v-model="formTambah.catatanHTML"
+            />
+            <button @click="tambahData">Simpan Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- edit modul-->
+      <div class="modul-overlay" v-if="showEditModul">
+        <div class="modul-box">
+          <div class="modul-header">
+            <h3>Edit Stock</h3>
+            <button class="btn-close" @click="showEditModul = false">X</button>
+          </div>
+          <div class="form-container">
+            <input
+              type="number"
+              placeholder="Qty"
+              v-model.number="editData.qty"
+            />
+            <input
+              type="number"
+              placeholder="Safety"
+              v-model.number="editData.safety"
+            />
+            <button @click="simpanEdit">Simpan Edit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- file js -->
+    <script src="js/dataBahanAjar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="js/stock.app.js"></script>
+  </body>
+</html>
