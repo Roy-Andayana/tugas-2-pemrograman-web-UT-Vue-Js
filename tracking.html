@@ -10,6 +10,7 @@
     <header>
       <h1>HALAMAN TRACKING BAHAN AJAR</h1>
       <nav id="navigasi">
+        <a href="index.html">Beranda</a>
         <a href="stock.html">Stock</a>
         <a href="tracking.html">Tracking</a>
       </nav>
@@ -18,7 +19,7 @@
     <!-- dashboard  tracking -->
     <div id="app" class="container">
       <div class="card">
-        <h2>Form Tracking Delivery Order</h2>
+        <h2>Form Data Bahan Ajar</h2>
         <div class="form-group">
           <label>Nomor DO</label>
           <input
@@ -88,7 +89,7 @@
           />
         </div>
 
-        <button @click="tambahDO">submit</button>
+        <button @click="tambahDO">Cari</button>
       </div>
 
       <!-- TABEL -->
@@ -117,7 +118,6 @@
               <td>{{ item.paket }}</td>
               <td>{{ item.tanggalKirim }}</td>
               <td>Rp {{ item.total.toLocaleString('id-ID') }}</td>
-
               <td>{{ item.status }}</td>
             </tr>
           </tbody>

@@ -1,16 +1,27 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 130px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f8f4ec;
   color: #2f2f2f;
+  background-image: url(../image/background-ut.jpeg);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 header {
-  background: #d9ddd0;
-  padding: 24px 0 18px;
+  background: skyblue;
+  padding: 15px 0 12px;
   text-align: center;
   border-bottom: 1px solid #c8ccbf;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 header h1 {
@@ -29,19 +40,24 @@ header h1 {
 
 #navigasi a {
   text-decoration: none;
-  color: #355e3b;
-  font-size: 16px;
+  color: darkblue;
+  font-size: 18px;
   font-weight: 600;
   transition: 0.2s ease;
 }
 
 #navigasi a:hover {
-  color: orange;
-  text-decoration: underline;
+  color: black;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 10px #fff,
+    0 0 20px orange,
+    0 0 40px #00bfff;
+  transform: scale(1.05);
 }
 
 .fitur-navbar {
-  background: white;
+  background: transparent;
   padding: 22px 24px;
   border-radius: 14px;
   margin-bottom: 24px;
@@ -110,7 +126,7 @@ header h1 {
 
 /* filter */
 .filter-container {
-  background: white;
+  background: transparent;
   padding: 15px;
   border-radius: 10px;
   margin-bottom: 20px;

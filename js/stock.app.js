@@ -1,6 +1,5 @@
 var app = new Vue({
   el: "#app",
-
   data: {
     upbjjList: ["Jakarta", "Surabaya", "Makassar", "Padang", "Denpasar"],
     kategoriList: ["MK Wajib", "MK Pilihan", "Praktikum", "Problem-Based"],
